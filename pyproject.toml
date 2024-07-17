@@ -3,7 +3,7 @@ name = "semantic-chunker"
 version = "0.1.0"
 description = "Semantic Chunker"
 authors = [{ name = "Na'aman Hirschfeld", email = "nhirschfeld@gmail.com" }]
-requires-python = ">=3.12"
+requires-python = ">=3.9"
 readme = "README.md"
 license = { text = "MIT" }
 classifiers = [
@@ -37,13 +37,13 @@ dependencies = [
     "typing-extensions>=4.12.2",
 ]
 
-[project.urls]
-Repository = "https://github.com/Goldziher/semantic-chunker"
-
 [project.optional-dependencies]
 tokenizers = [
     "tokenizers>=0.19.1",
 ]
+
+[project.urls]
+Repository = "https://github.com/Goldziher/semantic-chunker"
 
 [build-system]
 requires = ["hatchling"]
