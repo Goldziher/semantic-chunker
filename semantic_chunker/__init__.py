@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from json import JSONDecodeError, loads
-from typing import Callable, Literal, Protocol, cast, overload
+from pathlib import Path
+from typing import Any, Callable, Literal, Protocol, cast, overload
 
 from semantic_text_splitter import CodeSplitter, MarkdownSplitter, TextSplitter
 from tree_sitter_language_pack import SupportedLanguage, get_binding
@@ -20,6 +21,8 @@ _splitters_kw_map: dict[Literal["text", "markdown", "code"], type[TextSplitter |
 }
 
 Callback = Callable[[str], int]
+
+__all__ = ["SemanticChunker", "get_chunker"]
 
 
 class SemanticChunker(Protocol):
@@ -48,7 +51,7 @@ class SemanticChunker(Protocol):
         ...
 
 
-def _is_valid_json(content: str) -> bool:
+def _is_valid_json(content: Any) -> bool:
     try:
         loads(content)
         return True
@@ -62,7 +65,7 @@ def _is_json_file_path(content: str) -> bool:
 
 @overload
 def get_chunker(  # type: ignore[no-any-unimported]
-    model: str | Tokenizer | Callback,
+    model: str | Tokenizer | Callback | Path,
     *,
     chunking_type: Literal["text"],
     max_tokens: int | tuple[int, int],
@@ -73,7 +76,7 @@ def get_chunker(  # type: ignore[no-any-unimported]
 
 @overload
 def get_chunker(  # type: ignore[no-any-unimported]
-    model: str | Tokenizer | Callback,
+    model: str | Tokenizer | Callback | Path,
     *,
     chunking_type: Literal["markdown"],
     max_tokens: int | tuple[int, int],
@@ -84,7 +87,7 @@ def get_chunker(  # type: ignore[no-any-unimported]
 
 @overload
 def get_chunker(  # type: ignore[no-any-unimported]
-    model: str | Tokenizer | Callback,
+    model: str | Tokenizer | Callback | Path,
     *,
     chunking_type: Literal["code"],
     language: SupportedLanguage,
@@ -95,7 +98,7 @@ def get_chunker(  # type: ignore[no-any-unimported]
 
 
 def get_chunker(  # type: ignore[no-any-unimported]
-    model: str | Tokenizer | Callback,
+    model: str | Tokenizer | Callback | Path,
     *,
     chunking_type: Literal["text", "markdown", "code"],
     language: SupportedLanguage | None = None,
@@ -139,8 +142,8 @@ def get_chunker(  # type: ignore[no-any-unimported]
         chunker = chunker_cls.from_callback(callback=model, **kwargs)  # type: ignore[arg-type]
     elif _is_valid_json(model):
         chunker = chunker_cls.from_huggingface_tokenizer_str(json=model, **kwargs)  # type: ignore[arg-type]
-    elif _is_json_file_path(model):
-        chunker = chunker_cls.from_huggingface_tokenizer_file(path=model, **kwargs)  # type: ignore[arg-type]
+    elif isinstance(model, Path) or _is_json_file_path(model):
+        chunker = chunker_cls.from_huggingface_tokenizer_file(path=str(model), **kwargs)  # type: ignore[arg-type]
     else:
         chunker = chunker_cls.from_tiktoken_model(model=model, **kwargs)  # type: ignore[arg-type]
 

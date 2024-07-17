@@ -3,11 +3,6 @@ name = "semantic-chunker"
 version = "0.1.0"
 description = "Semantic Chunker"
 authors = [{ name = "Na'aman Hirschfeld", email = "nhirschfeld@gmail.com" }]
-dependencies = [
-    "tree-sitter-language-pack>=0.2.0",
-    "semantic-text-splitter>=0.14.1",
-    "typing-extensions>=4.12.2",
-]
 requires-python = ">=3.12"
 readme = "README.md"
 license = { text = "MIT" }
@@ -36,8 +31,19 @@ keywords = [
     "tree-sitter",
 ]
 
+dependencies = [
+    "tree-sitter-language-pack>=0.2.0",
+    "semantic-text-splitter>=0.14.1",
+    "typing-extensions>=4.12.2",
+]
+
 [project.urls]
 Repository = "https://github.com/Goldziher/semantic-chunker"
+
+[project.optional-dependencies]
+tokenizers = [
+    "tokenizers>=0.19.1",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -47,10 +53,21 @@ build-backend = "hatchling.build"
 skip-excluded-dirs = true
 
 [tool.hatch.build.targets.sdist]
-only-include = ["semantic_chunker"]
+include = ["semantic_chunker"]
+dependencies = [
+    "tree-sitter-language-pack>=0.2.0",
+    "semantic-text-splitter>=0.14.1",
+    "typing-extensions>=4.12.2",
+]
 
 [tool.hatch.build.targets.wheel]
-only-include = ["semantic_chunker"]
+include = ["semantic_chunker"]
+pure_python = false
+dependencies = [
+    "tree-sitter-language-pack>=0.2.0",
+    "semantic-text-splitter>=0.14.1",
+    "typing-extensions>=4.12.2",
+]
 
 [tool.pdm]
 distribution = true
