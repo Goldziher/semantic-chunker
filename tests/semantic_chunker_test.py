@@ -31,7 +31,7 @@ def test_get_chunker(
             max_tokens=10,
             overlap=1,
             trim=False,
-            language=language,  # type: ignore[arg-type]
+            tree_sitter_language=language,  # type: ignore[arg-type]
         ),
         expected_cls,
     )
@@ -39,7 +39,7 @@ def test_get_chunker(
 
 def test_get_code_chunker_wihtout_language_raises() -> None:
     with pytest.raises(ValueError):
-        get_chunker("gpt-3.5-turbo", chunking_type="code", max_tokens=10, language=None)  # type: ignore[call-overload]
+        get_chunker("gpt-3.5-turbo", chunking_type="code", max_tokens=10, tree_sitter_language=None)  # type: ignore[call-overload]
 
 
 @pytest.mark.parametrize(
@@ -90,7 +90,7 @@ def test_get_code_chunker_wihtout_language_raises() -> None:
                                          }
                                      }
                                      """,
-            13,
+            14,
             "kotlin",
         ),
     ),
@@ -105,6 +105,6 @@ def test_chunk_content(
         "gpt-3.5-turbo",
         chunking_type=chunking_type,
         max_tokens=10,
-        language=language,
+        tree_sitter_language=language,
     ).chunks(content)
     assert len(chunks) == expected_chunks

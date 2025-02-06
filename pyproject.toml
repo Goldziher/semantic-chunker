@@ -1,132 +1,126 @@
+[build-system]
+build-backend = "hatchling.build"
+
+requires = [ "hatchling" ]
+
 [project]
 name = "semantic-chunker"
-version = "0.1.0"
+version = "0.2.0"
 description = "Semantic Chunker"
-authors = [{ name = "Na'aman Hirschfeld", email = "nhirschfeld@gmail.com" }]
-requires-python = ">=3.9"
 readme = "README.md"
-license = { text = "MIT" }
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Information Technology",
-    "Natural Language :: English",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Software Development :: Libraries",
-    "Topic :: Software Development",
-    "Typing :: Typed",
-]
 keywords = [
-    "semantic-chunking",
-    "semantic",
-    "ai",
-    "chunking",
-    "text-splitter",
-    "code-splitter",
-    "tree-sitter",
+  "ai",
+  "chunking",
+  "code-splitter",
+  "semantic",
+  "semantic-chunking",
+  "text-splitter",
+  "tree-sitter",
 ]
 
+license = { text = "MIT" }
+authors = [ { name = "Na'aman Hirschfeld", email = "nhirschfeld@gmail.com" } ]
+requires-python = ">=3.9"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Information Technology",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
 dependencies = [
-    "tree-sitter-language-pack>=0.2.0",
-    "semantic-text-splitter>=0.14.1",
-    "typing-extensions>=4.12.2",
+  "semantic-text-splitter>=0.22.0",
+  "typing-extensions>=4.12.2",
 ]
 
-[project.optional-dependencies]
-tokenizers = [
-    "tokenizers>=0.19.1",
+optional-dependencies.all = [
+  "tokenizers>=0.21.0",
+  "tree-sitter-language-pack>=0.4.0",
 ]
 
-[project.urls]
-Repository = "https://github.com/Goldziher/semantic-chunker"
+optional-dependencies.code = [
+  "tree-sitter-language-pack>=0.4.0",
+]
+optional-dependencies.tokenizers = [
+  "tokenizers>=0.21.0",
+]
+urls.Repository = "https://github.com/Goldziher/semantic-chunker"
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[dependency-groups]
+dev = [
+  "mypy>=1.15.0",
+  "pre-commit>=4.1.0",
+  "pytest>=8.3.4",
+  "pytest-cov>=6.0.0",
+  "ruff>=0.9.4",
+  "tokenizers>=0.21.0",
+]
 
 [tool.hatch.build]
 skip-excluded-dirs = true
 
 [tool.hatch.build.targets.sdist]
-include = ["semantic_chunker"]
+include = [ "semantic_chunker" ]
 
 [tool.hatch.build.targets.wheel]
-include = ["semantic_chunker"]
-
-[tool.pdm]
-distribution = true
-
-[tool.pdm.dev-dependencies]
-dev = [
-    "pytest>=8.2.2",
-    "mypy>=1.10.1",
-    "ruff>=0.5.2",
-    "pre-commit>=3.7.1",
-    "pytest-cov>=5.0.0",
-    "tokenizers>=0.19.1",
-]
-
-[tool.pdm.scripts]
-lint = "pre-commit run --all-files"
-test = "pytest tests"
-coverage = "coverage run -m pytest tests && coverage report"
+include = [ "semantic_chunker" ]
 
 [tool.ruff]
-line-length = 120
 target-version = "py39"
-src = ["semantic_chunker", "tests"]
-lint.select = ["ALL"]
+line-length = 120
+src = [ "semantic_chunker", "tests" ]
+format.docstring-code-line-length = 120
+format.docstring-code-format = true
+lint.select = [ "ALL" ]
 
 lint.ignore = [
-    "ANN401", # dynamically typed ANY
-    "COM812", # Conflicts with formatter
-    "D100", # # pydocstyle - missing docstring in public module
-    "D104", # pydocstyle - missing docstring in public package
-    "D107", # pydocstyle - missing docstring in __init__
-    "D205", # pydocstyle - 1 blank line required between summary line and description
-    "E501", # pycodestyle line too long, handled by ruff format
-    "EM", # Exception messages,
-    "FBT", # Boolean values
-    "FIX", # we allow todo and fixme comments
-    "ISC001", # Conflicts with formatter
-    "TD", # we allow todo and fixme comments
-    "TRY", # Try except block, rules are too strict
-    "PLR", # Pylint
+  "ANN401", # dynamically typed ANY
+  "COM812", # Conflicts with formatter
+  "D100",   # # pydocstyle - missing docstring in public module
+  "D104",   # pydocstyle - missing docstring in public package
+  "D107",   # pydocstyle - missing docstring in __init__
+  "D205",   # pydocstyle - 1 blank line required between summary line and description
+  "E501",   # pycodestyle line too long, handled by ruff format
+  "EM",     # Exception messages,
+  "FBT",    # Boolean values
+  "FIX",    # we allow todo and fixme comments
+  "ISC001", # Conflicts with formatter
+  "PLR",    # Pylint
+  "TD",     # we allow todo and fixme comments
+  "TRY",    # Try except block, rules are too strict
 ]
 
-[tool.ruff.lint.per-file-ignores]
-"tests/**/*.*" = [
-    "PT", "S", "D", "ARG", "PGH", "SLF",
-]
+lint.per-file-ignores."tests/**/*.*" = [ "ARG", "D", "PGH", "PT", "S", "SLF" ]
+lint.isort.known-first-party = [ "semantic_chunker", "tests" ]
+lint.pydocstyle.convention = "google"
 
-[tool.ruff.format]
-docstring-code-format = true
-docstring-code-line-length = 120
+[tool.pyproject-fmt]
+keep_full_version = true
+max_supported_python = "3.13"
 
-[tool.ruff.lint.pydocstyle]
-convention = "google"
+[tool.coverage.run]
+omit = [ "*/tests/*" ]
+plugins = [ "covdefaults" ]
+source = [ "semantic_chunker" ]
 
-[tool.ruff.lint.isort]
-known-first-party = ["semantic_chunker", "tests"]
+[tool.coverage.report]
+fail_under = 100
 
 [tool.mypy]
-packages = ["semantic_chunker", "tests"]
+packages = [ "semantic_chunker", "tests" ]
 python_version = "3.9"
 disallow_untyped_decorators = true
 disallow_any_unimported = true
 show_error_codes = true
 strict = true
 warn_unreachable = true
-
-[tool.coverage.run]
-omit = ["*/tests/*"]
-plugins = ["covdefaults"]
-source = ["semantic_chunker"]
-
-[tool.coverage.report]
-fail_under = 100
