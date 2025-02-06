@@ -3,22 +3,29 @@ name: Release
 on:
   release:
     types: [published]
+
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
     steps:
-    - uses: actions/checkout@v4
-    - uses: pdm-project/setup-pdm@v4
-      with:
-        python-version: 3.12
-        cache: true
-        cache-dependency-path: |
-          ./pdm.lock
-    - name: Install Dependencies
-      run: pdm install
-    - name: Build
-      run: pdm build -v -d dist
-    - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{secrets.PYPI_API_TOKEN}}
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+
+      - name: Install Dependencies
+        run: uv build
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
